@@ -1,4 +1,4 @@
-require 'barrister/intraprocess/version'
+require 'barrister-intraprocess/version'
 
 module Barrister
 
