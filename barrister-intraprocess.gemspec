@@ -20,5 +20,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "barrister", '~> 0'
   spec.add_development_dependency "rake", '~> 0'
-  spec.add_development_dependency 'rspec', '~> 0'
+  spec.add_development_dependency 'rspec', '~> 2.0'
 end
