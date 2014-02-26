@@ -2,36 +2,36 @@ require 'barrister-intraprocess/version'
 
 module Barrister
 
-  module Containers
+  class IntraProcessContainer
 
-    class IntraProcess
+    def initialize(json_path, handlers)
+      contract = Barrister::contract_from_file(json_path)
+      @server  = Barrister::Server.new(contract)
 
-      def initialize(json_path, service_klass, interface_name=nil)
-        contract = Barrister::contract_from_file(json_path)
-        @server  = Barrister::Server.new(contract)
-        @server.add_handler(interface_name || service_klass.to_s, service_klass.new)
+      # in case we are passed a single handler
+      handlers = handlers.kind_of?(Array) ? handlers : [handlers]
+
+      # register each provided handler
+      handlers.each do |handler|
+        iface_name = handler.class.to_s.split('::').last
+        @server.add_handler iface_name, handler
       end
+    end
 
-      def process(message)
-        @server.handle(message)
-      end
-
+    def process(message)
+      @server.handle(message)
     end
 
   end
 
-  module Transports
+  class IntraProcessTransport
 
-    class IntraProcess
+    def initialize(service_container)
+      @service_container = service_container
+    end
 
-      def initialize(service_container)
-        @service_container = service_container
-      end
-
-      def request(message)
-        @service_container.process message
-      end
-
+    def request(message)
+      @service_container.process message
     end
 
   end
